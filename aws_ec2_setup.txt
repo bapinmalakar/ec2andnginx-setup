@@ -1,0 +1,100 @@
+-> open cmd wher key-pair save.
+-> sudo apt-get update
+-> sudo apt-get update
+-> sudo apt-get dist-upgrade
+-> Add node.js
+	-> sudo apt-get install python-software-properties
+	-> curl -sl https://deb.nodesource.com/setup_8.x | sude -E bash -
+	-> sudo apt-get install nodejs
+	-> for check npm -v
+	-> node -v
+-> Add mongo
+	-> install mongo 
+		sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv                 		2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+	-> set up files for mongo db
+		echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6                 		multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+	-> sudo apt-get update
+	-> sudo apt-get mongodb.org
+	-> for check start mongo sudo service mongod start then mongod
+-> Add git
+	-> sudo apt-get install git
+	-> for check git --version
+	->clone your project git clone 'repo'
+-> now make changes what ever you need in your code
+-> run server npm start
+-> To set domain
+	-> go to route53, create new
+	-> then select hosted zone.
+	-> select your zone you create and got to Create record set
+	-> then copy all address to your domain.
+	-> then generate ec2 static ip.
+	-> go to cmd install nginx and update
+		-> $ sudo apt-get update && sudo apt-get upgrade -y
+		-> $ sudo apt-get install nginx -y
+		-> Check status of nginx (sudo systemctl status nginx)
+		-> Start nginx (sudo systemctl start nginx)
+		-> Sure nginx run (sudo systemctl enable nginx)
+	-> get private ip address using 
+		wget -q -O - 'http://169.254.169.254/latest/meta-data/local-ipv4'
+	-> Remove default file from sites-available 
+		sudo rm /etc/nginx/sites-available/default
+	-> Add default file
+		sudo nano /etc/nginx/sites-available/default
+	-> Add below code
+		server {
+    			listen 80;
+    			server_name 'enter your domain1 domain2';
+    			location / {
+        			proxy_pass http://localhost:port;
+        			proxy_http_version 1.1;
+        			proxy_set_header Upgrade $http_upgrade;
+        			proxy_set_header Connection 'upgrade';
+        			proxy_set_header Host $host;
+        			proxy_cache_bypass $http_upgrade;
+     			}
+		}
+	-> Test nginx configuration (sudo nginx -t)
+	-> Relod nginx if status ok ( sudo /etc/init.d/nginx reload)
+	-> For start nginx (sudo systemctl restart nginx)
+-> Run multiple process with pm2 for same app
+	-> make process.json file and enter below code
+		{
+    			"apps": [
+      					{
+           					"name": "app1",
+          					"script": "server.js",
+            					"instances": "2",
+            					"exec_mode": "fork",
+            					"env": {
+                					"PORT": 8100
+            					}
+        				},
+        				{
+            					"name": "app2",
+            					"script": "server.js",
+            					"instances": "2",
+            					"exec_mode": "fork",
+            					"env": {
+                					"PORT": 8200
+            					}
+        				},
+        				{
+            					"name": "app3",
+            					"script": "server.js",
+            					"instances": "2",
+            					"exec_mode": "fork",
+            					"env": {
+                					"PORT": 8300
+            					}
+        				}
+    				]
+		}
+-> Go to package.json file and type and inside script object write...   
+		"start": "pm2 start ./process.json",
+-> Now npm start
+-> Move to ec2->secutity group>inbound then click edit and then click add rule for set port 
+-> Now type port range 8200/ your port then select source "anywhere" and save it
+-> Now type your public ip with different port and test it
+
+
+	

@@ -1,0 +1,40 @@
+-> Login to aws using ubuntu index
+-> install nginx(if not present sudo apt-get install nginx)
+-> move to nginx folder
+	-> cd /etc/nginx
+	-> sudo nano nginx.conf
+	-> Remove everything  and start typing
+		-> events {
+			worker_connections 768;
+		   }
+		   http {
+			upstream myapp {
+				server public_ip_addres:port weight = 1;
+				server public_ip_addres:port weight = 1;
+			}
+			server {
+				location / {
+					proxy_pass http://myapp;
+				}
+			}
+		   }
+-> Save everything, note space metter.
+-> sudo nginx -t (for test if ok)
+-> sudo service nginx restart
+-> Now run simple load balance done. weight 1 and 1 meand 50%
+-> Now for healt check set healthcheck directive, default health check interval is 5second
+	location / {
+			proxy_pass http://myapp;
+			health_check;
+	}
+	-> Increase healtchecking interval
+		health_check interval=20 fails=3 passes=2;
+		Interval increase to 20second
+-> Now set some parameter that will decide server is unavilable or not, default is 10second
+	upstream myapp{
+		server 127.0.0.1:8100 max_fails=2 fail_timeout=30s;
+		server 127.0.0.1:8200 max_fails=2 fail_timeout=30s;
+	}
+	Here max_fails and fail_timeout means within 30s ther server shoul faild 2 request, then it mark as         unavailable
+-> Now anither things is taht after recover unavailable server send request slowly slowly we need to set
+	server 127.0.0.1:8100 max_fails=2 slow_start=30s;

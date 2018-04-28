@@ -1,0 +1,11 @@
+pm2 command
+-> Stop:	pm2 stop appname or pm2 stop all
+-> list:	pm2 list appname or pm2 list
+-> status	pm2 status
+-> clear list	pm2 delete appname
+-> view all logs	 pm2 logs
+-> Log option	pm2 logs -h
+-> only error logs pm2 logs --err
+-> only output	pm2 logs --out
+-> raw output	pm2 logs --raw
+-> Clear logs	pm2 flush

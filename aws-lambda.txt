@@ -1,0 +1,27 @@
+1. npm install -g serverless // for use of lambda
+2. For node.js serverless create -t aws-nodejs // create bluprint for aws nodejs and -t stand for template
+3. serverless.yml file
+    a. set service: xyz // its your server name, anything you give a name
+    b provider:
+            name: aws // not chnagege
+            runtime: nodejs8.9 // change vaesion you want
+    c.functions:
+            hello:
+                handler: handler.hello
+                events:
+                    - http:
+                    path: users/create
+                    method: get
+
+    Its the main part which tell when your lambda function trigger,line1. name of handler file  handeler.js  , sectond line  name of handeler function, third line when to event trigger
+4. Goto aws console and select security cradential from manu.
+5. Select access key
+6.Select create new access key and copy access key
+7. Move to folder where make project and open cmd that location and type
+    serverless config credentials --provider aws --key youe0aws-access-key --secret your-aws-secret-key // it will for configure
+8. After success this we can deploy: serverless deploy
+9. After few seconds and after seccessfull deploy it will give the http link for this project
+10. Every time whenever u change you have to deploy: serverless deploy
+11. whenever i added new handeler and event for that i get new url for it, meand each handeler have a url because they have different path
+12. We can define stage maens make two diffrent branch, by default it's dev
+    serverless deploy --production
